@@ -17,18 +17,17 @@ PLOTS_DIR.mkdir(exist_ok=True)
 plt.style.use('default')  # Usar estilo por defecto en lugar de seaborn
 sns.set_theme(style="whitegrid")  # Configuración más compatible de seaborn
 
-# Leer datos
-df = pd.read_csv(DATA_DIR / 'manet-results.csv', names=['run', 'flowId', 'srcAddr', 'dstAddr', 'txPackets', 'rxPackets', 'lostPackets', 'throughputMbps', 'delaySeconds', 'hopCount', 'pdr'])
+# Leer datos (ahora usando los nombres de columnas del CSV)
+df = pd.read_csv(DATA_DIR / 'manet-results.csv')
 
 # Extraer información de las direcciones IP para clasificar los flujos
 df['is_inter_cluster'] = df.apply(
-    lambda row: row['srcAddr'].split('.')[2] != row['dstAddr'].split('.')[2],
+    lambda row: row['src_addr'].split('.')[2] != row['dst_addr'].split('.')[2],
     axis=1
 )
 
-# Agrupar por configuración (members, time) y calcular promedios
-metrics = ['throughputMbps', 'delaySeconds', 'hopCount', 'pdr']
-grouped = df.groupby(['run', 'is_inter_cluster'])[metrics].agg(['mean', 'std']).reset_index()
+# Métricas a analizar
+metrics = ['throughput_mbps', 'delay_seconds', 'hop_count', 'pdr']
 
 # 1. PDR vs Número de nodos (separado por tráfico inter/intra cluster)
 plt.figure(figsize=(10, 6))
@@ -42,7 +41,7 @@ plt.close()
 # 2. CDF del retardo
 plt.figure(figsize=(10, 6))
 for is_inter in [True, False]:
-    data = df[df['is_inter_cluster'] == is_inter]['delaySeconds']
+    data = df[df['is_inter_cluster'] == is_inter]['delay_seconds']
     data = data[data > 0]  # Filtrar valores válidos
     if not data.empty:
         sns.ecdfplot(data=data, label='Inter-cluster' if is_inter else 'Intra-cluster')
@@ -55,7 +54,7 @@ plt.close()
 
 # 3. Distribución de saltos
 plt.figure(figsize=(10, 6))
-sns.histplot(data=df[df['hopCount'] > 0], x='hopCount', hue='is_inter_cluster',
+sns.histplot(data=df[df['hop_count'] > 0], x='hop_count', hue='is_inter_cluster',
             multiple="layer", stat='density', discrete=True)
 plt.title('Distribución del Número de Saltos')
 plt.xlabel('Número de Saltos')
@@ -65,7 +64,7 @@ plt.close()
 
 # 4. Throughput promedio por tipo de tráfico
 plt.figure(figsize=(10, 6))
-sns.boxplot(data=df[df['throughputMbps'] > 0], x='run', y='throughputMbps',
+sns.boxplot(data=df[df['throughput_mbps'] > 0], x='run', y='throughput_mbps',
             hue='is_inter_cluster')
 plt.title('Throughput por Tipo de Tráfico')
 plt.xlabel('Run Number')

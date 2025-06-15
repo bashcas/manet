@@ -17,8 +17,8 @@ NS_LOG_COMPONENT_DEFINE ("HierarchicalManetSimulation");
 
 // Función auxiliar para escribir encabezados CSV
 void WriteCSVHeader(std::ofstream& csv) {
-  csv << "run,flowId,srcAddr,dstAddr,txPackets,rxPackets,lostPackets,"
-      << "throughputMbps,delaySeconds,hopCount,pdr" << std::endl;
+  csv << "run,flow_id,src_addr,dst_addr,tx_packets,rx_packets,lost_packets,"
+      << "throughput_mbps,delay_seconds,hop_count,pdr" << std::endl;
 }
 
 int
