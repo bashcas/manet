@@ -1,0 +1,78 @@
+Análisis de Rendimiento de AODV en MANET Jerárquica
+=================================================
+
+Configuración de la Simulación
+----------------------------
+- Topología: MANET jerárquica con 2 clústeres de primer nivel y 1 super-clúster
+- Movilidad:
+  * Nodos miembro: Random Walk 2D
+  * Cabezas de clúster: Velocidad constante (~1 m/s)
+  * Super-head: Random Waypoint
+- Protocolo de enrutamiento: AODV
+- Tráfico: UDP bidireccional entre nodos de diferentes clústeres
+
+Resultados Principales
+--------------------
+
+1. Packet Delivery Ratio (PDR)
+   - Tráfico Intra-cluster: 94.87% (excelente)
+   - Tráfico Inter-cluster: 4.57% (muy bajo)
+   → La movilidad jerárquica afecta significativamente la entrega de paquetes entre clústeres
+
+2. Retardo
+   - Intra-cluster: 0.1064 segundos
+   - Inter-cluster: 0.4048 segundos
+   → El retardo se cuadruplica en comunicaciones inter-cluster
+
+3. Número de Saltos
+   - Intra-cluster: máximo 3 saltos
+   - Inter-cluster: hasta 6.66 saltos
+   → La estructura jerárquica aumenta significativamente la longitud de las rutas
+
+4. Throughput
+   - Intra-cluster: 0.0001 Mbps
+   - Inter-cluster: 0.0443 Mbps
+   → Mayor throughput en comunicaciones inter-cluster debido al mayor volumen de datos
+
+Conclusiones
+-----------
+
+1. Impacto de la Movilidad Jerárquica:
+   - La movilidad combinada (nodos y clústeres) tiene un impacto severo en el rendimiento de AODV
+   - El protocolo muestra dificultades para mantener rutas estables en escenarios de movilidad múltiple
+
+2. Eficiencia por Tipo de Tráfico:
+   - El tráfico intra-cluster es más confiable (alto PDR)
+   - El tráfico inter-cluster sufre de alta pérdida de paquetes
+   - Los retardos son significativamente mayores en comunicaciones inter-cluster
+
+3. Escalabilidad:
+   - El número de saltos aumenta considerablemente en comunicaciones inter-cluster
+   - La estructura jerárquica introduce overhead adicional en el enrutamiento
+
+Recomendaciones
+--------------
+
+1. Mejoras Potenciales:
+   - Implementar mecanismos de predicción de movilidad en AODV
+   - Considerar protocolos específicos para MANETs jerárquicas
+   - Optimizar los parámetros de AODV para escenarios de movilidad múltiple
+
+2. Consideraciones de Diseño:
+   - Priorizar comunicaciones intra-cluster cuando sea posible
+   - Implementar mecanismos de control de congestión adaptativos
+   - Considerar técnicas de clustering dinámico
+
+3. Futuras Investigaciones:
+   - Evaluar otros protocolos de enrutamiento
+   - Analizar el impacto de diferentes patrones de movilidad
+   - Estudiar el efecto de la densidad de nodos en el rendimiento
+
+Limitaciones del Estudio
+----------------------
+- Escenario simplificado con solo dos clústeres de primer nivel
+- Patrones de movilidad predefinidos
+- Tráfico UDP sin control de congestión
+- Número limitado de nodos por clúster
+
+Este análisis demuestra que la movilidad jerárquica en MANETs presenta desafíos significativos para AODV, especialmente en comunicaciones inter-cluster. Los resultados sugieren la necesidad de protocolos más adaptados a escenarios de movilidad múltiple y estructuras jerárquicas.

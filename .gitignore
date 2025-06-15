@@ -1,0 +1,26 @@
+# Python virtual environment
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE settings
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# NS-3 build files
+*.o
+*.pcap
+build/
+
+# Temporary files
+*.log
+*.tmp
+
+# Keep all data and analysis files
+!*.csv
+!*.png
+!*.txt 
