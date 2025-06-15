@@ -1,3 +1,6 @@
+# NS-3 installation
+ns-3-dev/
+
 # Python virtual environment
 venv/
 __pycache__/

@@ -2,110 +2,127 @@
 
 This repository contains the analysis of a hierarchical MANET (Mobile Ad-hoc Network) simulation using NS-3, focusing on the impact of hierarchical mobility on AODV protocol performance.
 
-## Prerequisites
+## Setup
 
-### NS-3 Setup
-
-1. Install NS-3 (version 3.27 or later):
+1. Clone this repository:
 
    ```bash
-   # Clone NS-3
+   git clone https://github.com/your-username/manet-analysis.git
+   cd manet-analysis
+   ```
+
+2. Clone NS-3 inside the project directory:
+
+   ```bash
    git clone https://gitlab.com/nsnam/ns-3-dev.git
    cd ns-3-dev
+   ```
 
-   # Configure and build NS-3
+3. Configure and build NS-3:
+
+   ```bash
    ./ns3 configure --enable-examples --enable-tests
    ./ns3 build
    ```
 
-2. Copy simulation file:
-   - Copy `manet.cc` to the `ns-3-dev/scratch/` directory
-   - This file contains the MANET simulation configuration
-
-## Directory Structure
-
-```
-manet_results/
-├── analysis/        # Detailed analysis and conclusions
-├── data/           # Raw simulation data and statistics
-├── plots/          # Generated visualizations
-└── scripts/        # Analysis and simulation scripts
-```
-
-## Python Analysis Requirements
-
-- Python 3.x
-- Required Python packages are listed in `requirements.txt`
-
-## Installation
-
-1. Create a Python virtual environment:
+4. Create Python virtual environment:
 
    ```bash
+   cd ..  # back to project root
    python -m venv venv
    source venv/bin/activate  # On Unix/macOS
    # or
    .\venv\Scripts\activate  # On Windows
    ```
 
-2. Install dependencies:
+5. Install Python dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
+## Directory Structure
+
+```
+manet-analysis/
+├── manet.cc              # NS-3 simulation code
+├── ns-3-dev/             # NS-3 installation (gitignored)
+├── data/                 # Simulation results
+├── plots/                # Generated visualizations
+├── scripts/              # Analysis scripts
+└── analysis/            # Documentation
+```
+
 ## Running the Simulation
 
-1. From the ns-3-dev directory:
+1. **Important**: First, copy the simulation file to NS-3's scratch directory:
 
    ```bash
-   ./ns3 run "scratch/manet --members=5 --time=200 --run=1"
+   cp manet.cc ns-3-dev/scratch/
+   ```
+
+2. Run the simulation:
+
+   ```bash
+   cd ns-3-dev
+   ./ns3 run scratch/manet.cc
+   ```
+
+   Optional command line parameters:
+
+   ```bash
+   ./ns3 run "scratch/manet.cc --members=5 --time=200 --run=1 --csv=../data/manet-results.csv"
    ```
 
    Parameters:
 
-   - `members`: Number of nodes per cluster (default: 5)
-   - `time`: Simulation time in seconds (default: 200)
-   - `run`: Run number for random seed (default: 1)
-   - `tracing`: Enable PCAP tracing (default: false)
-   - `append`: Append to existing CSV (default: false)
+   - `--members`: Number of member nodes per cluster (default: 5)
+   - `--time`: Simulation duration in seconds (default: 200)
+   - `--run`: Run number for this simulation (default: 1)
+   - `--csv`: Output CSV file path (default: manet-results.csv)
+   - `--append`: Append to existing CSV instead of overwrite (optional)
+   - `--tracing`: Enable pcap tracing (optional)
 
-2. For multiple runs with different parameters:
+3. For multiple simulation runs:
+
    ```bash
    cd scripts
    ./run-experiments.sh
    ```
 
-## Analyzing Results
+   The script will:
 
-1. After running the simulation:
+   - Automatically copy manet.cc to ns-3-dev/scratch/
+   - Run multiple simulations with different parameters
+   - Save results to data/manet-results.csv
 
+   Parameters (configurable in run-experiments.sh):
+
+   - Members per cluster: 3, 5, 7
+   - Simulation times: 100s, 200s, 300s
+   - 5 runs per configuration
+
+4. Analyze results:
    ```bash
    python analyze_results.py
    ```
-
-   This will generate:
-
-   - Statistical summaries
-   - Visualization plots
-   - Performance analysis
 
 ## Generated Files
 
 ### Data Files
 
-- `manet-results.csv`: Raw simulation data with metrics:
+- `data/manet-results.csv`: Raw simulation data with metrics:
   - Packet Delivery Ratio (PDR)
   - End-to-end delay
   - Hop count
   - Throughput
-- `summary_stats.csv`: Statistical summary of results
+- `data/summary_stats.csv`: Statistical summary of results
 
 ### Visualizations
 
-- `pdr_analysis.png`: Packet Delivery Ratio analysis
-- `delay_cdf.png`: Delay Cumulative Distribution Function
-- `hop_distribution.png`: Hop count distribution
-- `throughput_analysis.png`: Throughput analysis
+- `plots/pdr_analysis.png`: Packet Delivery Ratio analysis
+- `plots/delay_cdf.png`: Delay Cumulative Distribution Function
+- `plots/hop_distribution.png`: Hop count distribution
+- `plots/throughput_analysis.png`: Throughput analysis
 
 ## Analysis Results
 
@@ -115,19 +132,3 @@ The complete analysis can be found in `analysis/analisis_manet.txt`. Key finding
 - Comparison of inter-cluster vs intra-cluster communication
 - Scalability analysis
 - Recommendations for improvement
-
-## Sharing This Work
-
-To share this analysis with others, they will need:
-
-1. This `manet_results` directory containing:
-
-   - Analysis scripts and results
-   - Generated data and visualizations
-   - Requirements and documentation
-
-2. The `manet.cc` file to run the simulation
-   - This should be placed in their NS-3 installation's `scratch` directory
-   - They must have NS-3 installed and configured
-
-Note: It is not necessary to share the entire NS-3 installation (ns-3-dev directory).
