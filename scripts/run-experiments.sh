@@ -34,11 +34,19 @@ RUNS=5                    # Repeticiones por configuración
 # Asegurarse de estar en el directorio de NS-3
 cd "$NS3_DIR" || exit 1
 
+# Variable para controlar si es la primera ejecución
+first_run=1
+
 for members in "${MEMBERS[@]}"; do
   for simtime in "${TIMES[@]}"; do
     for run in $(seq 1 $RUNS); do
       echo "Running simulation with members=$members time=$simtime run=$run"
-      ./ns3 run "scratch/manet --members=$members --time=$simtime --run=$run --csv=$DATA_DIR/manet-results.csv --append=1"
+      if [ "$first_run" -eq 1 ]; then
+        ./ns3 run "scratch/manet --members=$members --time=$simtime --run=$run --csv=$DATA_DIR/manet-results.csv --append=0"
+        first_run=0
+      else
+        ./ns3 run "scratch/manet --members=$members --time=$simtime --run=$run --csv=$DATA_DIR/manet-results.csv --append=1"
+      fi
     done
   done
 done
